@@ -1,0 +1,57 @@
+.flx-tbl { position:relative }
+
+.flx-tbl,
+.flx-rw {
+	cursor:pointer;
+	display:-webkit-box;
+	display:-moz-box;
+	display:-ms-box;
+	display:box;
+	-webkit-box-orient:vertical;
+	-moz-box-orient:vertical;
+	-ms-box-orient:vertical;
+	box-orient:vertical;
+}
+.flx-rw {
+	margin:0 0 1px;
+	-webkit-box-align:stretch;
+	-moz-box-align:stretch;
+	-ms-box-align:stretch;
+	box-align:stretch;
+	-webkit-box-orient:horizontal;
+	-moz-box-orient:horizontal;
+	-ms-box-orient:horizontal;
+	box-orient:horizontal;
+}
+.flx-rw:nth-child(odd) { background-color:rgba(0,0,0,0.04) }
+.flx-rw:nth-child(even) { background-color:rgba(0,0,0,0.08) }
+
+.flx-cl-lf { text-align:left }
+.flx-cl-rg { text-align:right }
+.flx-cl-ct { text-align:center }
+.flx-cl-mr .sub { display:block; font-size:0.8em }
+.flx-cl-mr .sub span { padding:0 8px 0 0 }
+.flx-cl-mr.flx-cl-right .sub span { padding:0 0 0 8px }
+
+.flx-tplf,
+.flx-tprg,
+.flx-btlf,
+.flx-btrg,
+.tbl-scrl-hor,
+.tbl-scrl-ver { position:absolute; left:0; top:0; overflow:hidden }
+
+.flx-rw-hdr { font-weight:600 }
+.flx-rw-hdr .flx-rw { margin:0; background-color:rgba(0,0,0,0.16) }
+.flx-rw-hdr .flx-rw .flx-cl { overflow:hidden }
+.flx-rw-hdr .flx-rw .sub { display:none }
+
+.flx-rw-hdr .clickToSort { float:right; text-align:left; width:20px; height:20px; text-indent:-9999px; display:block; background:url(../img/icons/sort.png) 0 0; background-size:20px auto }
+.flx-rw-hdr .clickToSort.asc { background-position:0 -20px }
+.flx-rw-hdr .clickToSort.desc { background-position:0 -40px }
+
+.flx-rw-hd,
+.flx-rw-cnt { background-color:transparent!important }
+
+.flx-cl { font-size:1.2em; color:#50526C; padding:10px; line-height:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.flx-cl,
+.flx-cl span { cursor:pointer }

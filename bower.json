@@ -1,0 +1,32 @@
+{
+  "name": "tshirt-table",
+  "version": "0.0.1",
+  "homepage": "https://github.com/xinix-technology/tshirt-table",
+  "authors": [
+    "Dwan <me@dwaan.com>"
+  ],
+  "description": "A momentum table event using CSS3 using touch event to use in mobile web app or mobile app",
+  "main": "tshirt-table.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "jquery",
+    "tshirt",
+    "touch",
+    "scroll",
+    "table"
+  ],
+  "license": "Apache",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "tshirt-scroll": "*"
+  }
+}
