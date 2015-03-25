@@ -1,3 +1,5 @@
+.clear { clear:both }
+
 .flx-tbl { position:relative }
 
 .flx-tbl,
@@ -23,35 +25,58 @@
 	-ms-box-orient:horizontal;
 	box-orient:horizontal;
 }
-.flx-rw:nth-child(odd) { background-color:rgba(0,0,0,0.04) }
-.flx-rw:nth-child(even) { background-color:rgba(0,0,0,0.08) }
+.flx-rw.hide { display:none }
+
+.flx-rw-cnt .flx-rw.odd { background-color:rgba(0,0,0,0.04) }
+.flx-rw-cnt .flx-rw.even { background-color:rgba(0,0,0,0.08) }
 
 .flx-cl-lf { text-align:left }
 .flx-cl-rg { text-align:right }
 .flx-cl-ct { text-align:center }
 .flx-cl-mr .sub { display:block; font-size:0.8em }
 .flx-cl-mr .sub span { padding:0 8px 0 0 }
-.flx-cl-mr.flx-cl-right .sub span { padding:0 0 0 8px }
+.flx-cl-mr.flx-cl-rg .sub span { padding:0 0 0 8px }
 
 .flx-tplf,
 .flx-tprg,
-.flx-btlf,
-.flx-btrg,
 .tbl-scrl-hor,
 .tbl-scrl-ver { position:absolute; left:0; top:0; overflow:hidden }
+
+.flx-btlf,
+.flx-btrg { float:left }
 
 .flx-rw-hdr { font-weight:600 }
 .flx-rw-hdr .flx-rw { margin:0; background-color:rgba(0,0,0,0.16) }
 .flx-rw-hdr .flx-rw .flx-cl { overflow:hidden }
 .flx-rw-hdr .flx-rw .sub { display:none }
 
-.flx-rw-hdr .clickToSort { float:right; text-align:left; width:20px; height:20px; text-indent:-9999px; display:block; background:url(../img/icons/sort.png) 0 0; background-size:20px auto }
-.flx-rw-hdr .clickToSort.asc { background-position:0 -20px }
-.flx-rw-hdr .clickToSort.desc { background-position:0 -40px }
+.flx-rw-hdr .sort { position:absolute; top:12px; right:8px; text-align:left; width:20px; height:20px; text-indent:-9999px; display:block; background:url(sort.png) 0 0; background-size:20px auto }
+.flx-rw-hdr .sort.asc { background-position:0 -20px }
+.flx-rw-hdr .sort.desc { background-position:0 -40px }
 
 .flx-rw-hd,
 .flx-rw-cnt { background-color:transparent!important }
 
-.flx-cl { font-size:1.2em; color:#50526C; padding:10px; line-height:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.flx-cl { position:relative; font-size:1.2em; color:#50526C; padding:10px; line-height:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.flx-cl input,
+.flx-cl .search { display:block; width:100% }
+.flx-cl input {
+	border:none; background:none; font-size:1em; margin:-2px 0 0; outline:none;
+    -webkit-touch-callout:all;
+    -webkit-user-select:all;
+    -khtml-user-select:all;
+    -moz-user-select:all;
+    -ms-user-select:all;
+    user-select:all;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	-ms-appearance:none;
+	appearance:none;
+	-webkit-border-radius:0;
+	-moz-border-radius:0;
+	-ms-border-radius:0;
+	border-radius:0;
+}
 .flx-cl,
 .flx-cl span { cursor:pointer }
+.flx-cl input { cursor:text }
