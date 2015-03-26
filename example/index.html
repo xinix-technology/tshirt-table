@@ -18,12 +18,13 @@
 	<link rel="stylesheet" href="../vendor/lato/css/lato.min.css" />
 	<link rel="stylesheet" href="../tshirt-table.css" />
 
+	<link rel="shortcut icon" type="image/png" href="../tshirt.png">
+
 	<!-- Custom CSS -->
 	<style type="text/css">
-		html, body { width:100%; height:100% }
-
 		html,
 		body {
+			width: 100%;
 			font: 16px/160%"Lato", sans-serif;
 			color: #333;
 			padding: 30px 0;
@@ -32,6 +33,7 @@
 			width: 80%;
 			padding: 0;
 			margin: 0 auto;
+			display: table;
 		}
 		h1 {
 			margin: 0;
@@ -46,10 +48,11 @@
 			border: 1px solid #f5f5f5;
 			padding: 10px;
 		}
-		.table {
+		.table,
+		.table2 {
 			overflow: hidden;
 			width: 100%;
-			height: 500px;
+			height: 400px;
 		}
 		.example {
 			padding: 10px 20px;
@@ -64,17 +67,86 @@
 
 <body>
 	<h1>T-shirt Table</h1>
-	<p>A split table implementasion based on tshirt-scroll.<br />See the source for more information</p>
+	<p>A split table implementasion based on tshirt-scroll.</p>
 
-	<div class="table">
-		<!-- Content will be generated in here -->
-	</div>
-
+	<h2>Just regular split table</h2>
+	<p>See the source for more information</p>
+	<div class="table"></div>
 	<p>Add 2 new rows at row #<input type="text" name="row" id="row" value="5" /> <button id="newrows">Add</button></p>
+
+	<h2>Just split table with header filter</h2>
+	<p>See the source for more information</p>
+	<div class="table2"></div>
+	<p>Add 2 new rows at row #<input type="text" name="row2" id="row2" value="5" /> <button id="newrows2">Add</button></p>
+
 </body>
 
 <script type="text/javascript">
 	$(function () {
+		var _data = [
+			["", 	"Name", 				"Room", 		"Group", 	"Floor", 	"Saverity", 	"Events", 	"Date", 		"Time"],
+			["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
+			["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
+			["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
+			["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
+			["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
+			["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
+			["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
+			["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
+			["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
+			["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
+			["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
+			["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
+			["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
+			["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
+			["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
+			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
+		];
+
 		var tbl = $(".table").table ({
 			freezeRow: 1,
 			freezeCol: 1,
@@ -84,69 +156,7 @@
 				sort: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		true, 			false],
 				find: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		false, 			false]
 			},
-			data: [
-				["", 	"Name", 				"Room", 		"Group", 	"Floor", 	"Saverity", 	"Events", 	"Date", 		"Time"],
-				["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
-				["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
-				["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
-				["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
-				["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
-				["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
-				["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
-				["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
-				["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
-				["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
-				["0", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 am"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 am"],
-				["2", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 am"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 am"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 pm"],
-				["3", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"2", 			"Buzz", 	"10/07/2014", 	"11:43 pm"],
-				["2", 	"Near The Window", 		"Ray Bedroom", 	"Group 2", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"11:23 pm"],
-				["1", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Beep", 	"10/07/2014", 	"10:23 pm"],
-				["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
-			]
+			data: _data
 		});
 
 		$("#newrows").click (function () {
@@ -154,8 +164,31 @@
 				this.push ({
 					row: $("#row").val(),
 					data: [
-						["21", 	"On Top of TV Set", 	"Living Room", 	"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
-						["22", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"]
+						["21", 	"Garage Area", 			"Garage", 		"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+						["22", 	"Roof", 				"Roof", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"]
+					]
+				});
+			});
+		});
+
+		var tbl2 = $(".table2").tablesearch ({
+			freezeRow: 1,
+			freezeCol: 1,
+			config : {
+				width: 	["50", 	"400/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
+				align: 	["", 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""],
+				sort: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		true, 			false],
+				find: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		false, 			false]
+			},
+			data: _data
+		});
+		$("#newrows2").click (function () {
+			tbl.each (function () {
+				this.push ({
+					row: $("#row2").val(),
+					data: [
+						["21", 	"Garage Area", 			"Garage", 		"Group 1", 	"Floor 1", 	"3", 			"Buzz", 	"10/07/2014", 	"12:03 am"],
+						["22", 	"Roof", 				"Roof", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"]
 					]
 				});
 			});

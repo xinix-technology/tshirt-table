@@ -51,6 +51,7 @@
 .flx-rw-hdr .flx-rw .sub { display:none }
 
 .flx-rw-hdr .sort { position:absolute; top:12px; right:8px; text-align:left; width:20px; height:20px; text-indent:-9999px; display:block; background:url(sort.png) 0 0; background-size:20px auto }
+.flx-rw-hdr .flx-cl-rg .sort { left:8px; right:initial }
 .flx-rw-hdr .sort.asc { background-position:0 -20px }
 .flx-rw-hdr .sort.desc { background-position:0 -40px }
 
