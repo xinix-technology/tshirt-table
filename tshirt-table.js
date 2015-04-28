@@ -63,16 +63,14 @@
 						// Only display non zero width content
 						if (config.width[indexCol] !== "0") {
 							dataAlign = "";
-							if (typeof config.align[indexCol] === "function") {
-								dataAlign += (config.align[indexCol](dataRowCol)[0] + " ");
-							} else {
-								if (config.align[indexCol] === "left")
-									dataAlign += "flx-cl-lf ";
-								if (config.align[indexCol] === "right")
-									dataAlign += "flx-cl-rg ";
-								if (config.align[indexCol] === "center")
-									dataAlign += "flx-cl-ct ";
-							}
+							if (typeof config.align[indexCol] === "function")
+								dataAlign += "flx-cl-func ";
+							if (config.align[indexCol] === "left")
+								dataAlign += "flx-cl-lf ";
+							if (config.align[indexCol] === "right")
+								dataAlign += "flx-cl-rg ";
+							if (config.align[indexCol] === "center")
+								dataAlign += "flx-cl-ct ";
 
 							// Check if the config says that it have sub value
 							if (config.width[indexCol].indexOf ("/") < 0) {
@@ -90,6 +88,10 @@
 										}
 									html += '</div>';
 								} else {
+									if (typeof config.align[indexCol] === "function") {
+										dataRowCol = config.align[indexCol](indexCol, data[indexRow][indexCol]);
+									}
+
 									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px"><span>' + dataRowCol + '<span></div>';
 								}
 							} else {
@@ -218,8 +220,8 @@
 			// Helper to add odd and event to row
 			this._stripes = function () {
 				$(this).find (".flx-rw-cnt .flx-rw").removeClass ("odd even");
-				$(this).find (".flx-rw-cnt .flx-rw:visible:odd").addClass ("odd");
-				$(this).find (".flx-rw-cnt .flx-rw:visible:even").addClass ("even");
+				$(this).find (".flx-rw-cnt .flx-rw:visible:nth-child(odd)").addClass ("odd");
+				$(this).find (".flx-rw-cnt .flx-rw:visible:nth-child(even)").addClass ("even");
 			}
 
 			// Filtering the list
