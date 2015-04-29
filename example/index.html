@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
 
-	<title>T-Shirt Scroll Example</title>
+	<title>T-Shirt Table Example</title>
 
 	<!-- Bare minimun javascript include -->
 	<script src="../vendor/jquery/dist/jquery.min.js" type="application/javascript"></script>
@@ -147,16 +147,21 @@
 			["1", 	"Near Kitchen", 		"Kitchen", 		"Group 2", 	"Floor 1", 	"3", 			"Buzz", 	"09/07/2014", 	"17:23 pm"],
 		];
 
+		var humanNum = function (index, value) {
+			return "#" + value;
+		}
+
 		var tbl = $(".table").table ({
 			freezeRow: 1,
 			freezeCol: 1,
 			config : {
-				width: 	["50", 	"400/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
-				align: 	["", 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""],
-				sort: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		true, 			false],
-				find: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		false, 			false]
+				width: 	["50", 		"400/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
+				align: 	[humanNum, 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""]
 			},
-			data: _data
+			data: _data,
+			done: function () {
+				console.log ("Table 1 done");
+			}
 		});
 
 		$("#newrows").click (function () {
@@ -171,19 +176,23 @@
 			});
 		});
 
+		// Please restore
 		var tbl2 = $(".table2").tablesearch ({
 			freezeRow: 1,
 			freezeCol: 1,
 			config : {
-				width: 	["50", 	"400/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
-				align: 	["", 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""],
-				sort: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		true, 			false],
-				find: 	[false, true, 			false, 			false, 		false, 		true, 			true, 		false, 			false]
+				width: 	["50", 		"400/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
+				align: 	[humanNum, 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""],
+				sort: 	[false, 	true, 			false, 			false, 		false, 		true, 			true, 		true, 			false],
+				find: 	[false, 	true, 			false, 			false, 		false, 		true, 			true, 		false, 			false]
 			},
-			data: _data
+			data: _data,
+			done: function () {
+				console.log ("Table 2 done");
+			}
 		});
 		$("#newrows2").click (function () {
-			tbl.each (function () {
+			tbl2.each (function () {
 				this.push ({
 					row: $("#row2").val(),
 					data: [
