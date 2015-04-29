@@ -76,22 +76,22 @@
 							if (config.width[indexCol].indexOf ("/") < 0) {
 								if (isHead === true) {
 									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px">';
-										if (config.find[indexCol]) {
-											html += '<span class="search">' + dataRowCol + '</span>';
-											html += '<input type="text" data-search="' + indexCol + '" style="display:none" placeholder="' + dataRowCol + '" />';
-										} else {
+										if (config.find)
+											if (config.find[indexCol]) {
+												html += '<span class="search">' + dataRowCol + '</span>';
+												html += '<input type="text" data-search="' + indexCol + '" style="display:none" placeholder="' + dataRowCol + '" />';
+											} else
+												html += '<span>' + dataRowCol + '</span>';
+										else
 											html += '<span>' + dataRowCol + '</span>';
-										}
 
-										if (config.sort[indexCol]) {
-											html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
-										}
+										if (config.sort)
+											if (config.sort[indexCol])
+												html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
 									html += '</div>';
 								} else {
-									if (typeof config.align[indexCol] === "function") {
+									if (typeof config.align[indexCol] === "function")
 										dataRowCol = config.align[indexCol](indexCol, data[indexRow][indexCol]);
-									}
-
 									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px"><span>' + dataRowCol + '<span></div>';
 								}
 							} else {
@@ -100,16 +100,18 @@
 
 								if (isHead === true) {
 									html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + arraySubValue[0] + 'px">';
-										if (config.find[indexCol]) {
-											html += '<span class="search">' + dataRowCol + '</span>';
-											html += '<input data-search="' + indexCol + '" type="text" style="display:none" placeholder="' + dataRowCol + '" />';
-										} else {
+										if (config.find)
+											if (config.find[indexCol]) {
+												html += '<span class="search">' + dataRowCol + '</span>';
+												html += '<input data-search="' + indexCol + '" type="text" style="display:none" placeholder="' + dataRowCol + '" />';
+											} else
+												html += '<span>' + dataRowCol + '</span>';
+										else
 											html += '<span>' + dataRowCol + '</span>';
-										}
 
-										if (config.sort[indexCol]) {
-											html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
-										}
+										if (config.sort)
+											if (config.sort[indexCol])
+												html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
 
 										html += '<span class="sub">';
 											for (var i = 0; i < indexesSubValue.length; i++) {
@@ -121,9 +123,8 @@
 									html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + arraySubValue[0] + 'px">';
 										html += '<span>' + dataRowCol + '</span>';
 										html += '<span class="sub">';
-											for (var i = 0; i < indexesSubValue.length; i++) {
+											for (var i = 0; i < indexesSubValue.length; i++)
 												html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
-											}
 										html += '</span>';
 									html += '</div>';
 								}
@@ -142,17 +143,30 @@
 					top = 0,
 					width = 0,
 					height = 0,
+					topheight = 0,
+					bottomheight = 0,
 					col = this.freezeCol,
 					row = this.freezeRow,
 					id = this.id;
 
+				// Reset size
+
 				// Set height of the header row so it will have the same row height
 				$("#" + id + " .flx-tprg .flx-rw").each(function (index) {
-					var height = $("#" + id + " .flx-tprg .rw-" + index).height (),
-						heightlf = $("#" + id + " .flx-tplf .rw-" + index).height ();
+					var height = 0,
+						heightlf = 0;
+
+					// Reset the height first
+					$("#" + id + " .flx-tprg .rw-" + index).css ("height", "");
+					$("#" + id + " .flx-tplf .rw-" + index).css ("height", "");
+
+					height = $("#" + id + " .flx-tprg .rw-" + index).height (),
+					heightlf = $("#" + id + " .flx-tplf .rw-" + index).height ();
 
 					if (heightlf > height)
 						height = heightlf;
+
+					topheight += height;
 
 					$("#" + id + " .flx-rw-hdr .rw-" + index).css ("height", height);
 				});
@@ -176,19 +190,27 @@
 
 				// Set height of the content row so it will have the same row height
 				$("#" + id + " .flx-btrg .flx-rw").each(function (index) {
+					var height = 0,
+						heightlf = 0;
+
 					index = index + row;
 
-					var height = $("#" + id + " .flx-btrg .rw-" + index).height (),
-						heightlf = $("#" + id + " .flx-btlf .rw-" + index).height ();
+					// Reset the height first
+					$("#" + id + " .flx-btrg .rw-" + index).css ("height", "");
+					$("#" + id + " .flx-btlf .rw-" + index).css ("height", "");
+
+					height = $("#" + id + " .flx-btrg .rw-" + index).height (),
+					heightlf = $("#" + id + " .flx-btlf .rw-" + index).height ();
 
 					if (heightlf > height)
 						height = heightlf;
+
+					bottomheight += height;
 
 					$("#" + id + " .flx-rw-cnt .rw-" + index).css ("height", height);
 				});
 
 				// Make the bottom left and bottom right content to have fix width and height
-				height = $("#" + id + " .flx-btlf").height ();
 				$("#" + id + " .flx-btlf").css ({
 					"width": left,
 					"left": 0
@@ -220,81 +242,53 @@
 			// Helper to add odd and event to row
 			this._stripes = function () {
 				$(this).find (".flx-rw-cnt .flx-rw").removeClass ("odd even");
-				$(this).find (".flx-rw-cnt .flx-rw:visible:nth-child(odd)").addClass ("odd");
-				$(this).find (".flx-rw-cnt .flx-rw:visible:nth-child(even)").addClass ("even");
-			}
-
-			// Filtering the list
-			this._filter = function (target) {
-				var filters = 0,
-					table = $(this);
-
-				table.find('.flx-rw-cnt .flx-rw').removeClass ('hide');
-				// Search the column that contain the string
-				table.find (".flx-rw-hdr input").each (function () {
-					if ($(this).val () !== ""){
-						table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search") + ':not(:contains("' + $(this).val () + '"))').parent ().each (function () {
-							table.find('.flx-rw-cnt .rw-' + $(this).attr ("data-row")).addClass ("hide");
-						});
-					}
-				});
-
-				this._stripes ();
-			};
-
-			// Helper to make the search input visible
-			this._search = function () {
-				var that = this;
-
-				$(window).click (function (event) {
-					if (!$(event.target).hasClass ("onfocus"))
-						$(".onfocus").removeClass("onfocus").toggle ();
-				});
-
-				$(this).find(".flx-rw-hdr .search").each (function () {
-					$(this).click (function () {
-						$(this).addClass("onfocus").toggle ();
-						$(this).siblings ("input").addClass("onfocus").toggle ().focus ().bind ('input', function () {
-							that._filter($(this));
-						});;
-					});
-				});
+				$(this).find (".flx-rw-cnt .flx-rw:visible:odd").addClass ("odd");
+				$(this).find (".flx-rw-cnt .flx-rw:visible:even").addClass ("even");
 			}
 
 			// Helper to draw the table and add scroll function
 			this.draw = function () {
-				var html = "";
+				var html = "",
+					assignscroll = false;
 
-				// Draw the header
-				html += '<div class="flx-rw-hdr">';
-					html += '<div class="flx-tplf">';
-						html += this._draw (this.data, this.config, 0, 0, this.freezeRow, this.freezeCol, true);
-					html += '</div>';
-					html += '<div class="flx-tprg tbl-scrl-hor">';
-						html += '<div data-twin="hor">';
-							html += this._draw (this.data, this.config, 0, this.freezeCol, this.freezeRow, null, true);
+				if ($(this).find (".flx-rw-hdr").length === 0) {
+					// Draw the header
+					html += '<div class="flx-rw-hdr">';
+						html += '<div class="flx-tplf">';
 						html += '</div>';
-					html += '</div>';
-					html += '<div class="clear"></div>';
-				html += '</div>';
-
-				// Draw the content
-				html += '<div class="flx-rw-cnt tbl-scrl-ver">';
-					html += '<div class="scroll">';
-						html += '<div class="flx-btlf">';
-							html += this._draw (this.data, this.config, this.freezeRow, 0, null, this.freezeCol, false);
-						html += '</div>';
-						html += '<div class="flx-btrg tbl-scrl-hor">';
-							html += '<div data-twin="hor">';
-								html += this._draw (this.data, this.config, this.freezeRow, this.freezeCol, null, null, false);
+						html += '<div class="flx-tprg tbl-scrl-hor">';
+							html += '<div data-twin="hor' + this.id + '">';
 							html += '</div>';
 						html += '</div>';
 						html += '<div class="clear"></div>';
 					html += '</div>';
-				html += '</div>';
 
-				// Put it to the HTML
-				$(this).addClass ("flx-tbl").attr ("id", this.id).html (html);
+					// Draw the content
+					html += '<div class="flx-rw-cnt tbl-scrl-ver">';
+						html += '<div class="scroll">';
+							html += '<div class="flx-btlf">';
+							html += '</div>';
+							html += '<div class="flx-btrg tbl-scrl-hor">';
+								html += '<div data-twin="hor' + this.id + '">';
+								html += '</div>';
+							html += '</div>';
+							html += '<div class="clear"></div>';
+						html += '</div>';
+					html += '</div>';
+
+					// Put it to the HTML
+					this.className += " flx-tbl";
+
+					// Faster than .html ()
+					this.innerHTML = html;
+
+					assignscroll = true;
+				}
+
+				$(this).find(".flx-tplf").html(this._draw (this.data, this.config, 0, 0, this.freezeRow, this.freezeCol, true));
+				$(this).find(".flx-tprg > div").html(this._draw (this.data, this.config, 0, this.freezeCol, this.freezeRow, null, true));
+				$(this).find(".flx-btlf").html(this._draw (this.data, this.config, this.freezeRow, 0, null, this.freezeCol, false));
+				$(this).find(".flx-btrg > div").html(this._draw (this.data, this.config, this.freezeRow, this.freezeCol, null, null, false));
 
 				// Apply odd and even
 				this._stripes ();
@@ -302,26 +296,23 @@
 				// Make the column and row fixed size
 				this._fixsize ();
 
-				this._search ();
-
-				// Call the scroller, only once to save CPU cycle
-				$(this).find (".tbl-scrl-hor > div").scroll ({
-					scrollVertical: false,
-					scrollHorizontal: true,
-					rubber: this.rubber
-				});
-				$(this).find (".tbl-scrl-ver > div").scroll ({
-					scrollVertical: true,
-					scrollHorizontal: false,
-					rubber: this.rubber
-				});
+				if (assignscroll) {
+					// Call the scroller, only once to save CPU cycle
+					$(this).find (".tbl-scrl-hor > div").scroll ({
+						scrollVertical: false,
+						scrollHorizontal: true,
+						rubber: this.rubber
+					});
+					$(this).find (".tbl-scrl-ver > div").scroll ({
+						scrollVertical: true,
+						scrollHorizontal: false,
+						rubber: this.rubber
+					});
+				}
 
 				// Counts
 				this.end = new Date().getTime();
 				console.log ("It tooks " + (this.end - this.start) + " seconds to generate");
-
-				// Call the callback
-				this.done (this.data);
 			}
 
 			// Push new data to table
@@ -369,9 +360,76 @@
 
 			// Draw table to HTML
 			this.draw ();
+
+			// Call the callback
+			this.done (this.data);
 		});
 
-		// Return the first element, because event if they are more than one, the data should be the same
+		// Return the elements
 		return this;
 	}
+
+	$.fn.tablesearch = function (options) {
+
+		// Default Settings
+		var defaults = {
+				freezeRow: 0,
+				freezeCol: 0,
+				config: {},
+				data: {},
+				gap: 1,
+				rubber: true,
+				done: function (data) {}
+			},
+			settings = $.extend({}, defaults, options);
+
+		$.fn.table.apply(this, [settings]);
+
+		this.each(function () {
+			// Filtering the list
+			this._filter = function (target) {
+				var filters = 0,
+					table = $(this);
+
+				table.find('.flx-rw-cnt .flx-rw').removeClass ('hide');
+				// Search the column that contain the string
+				table.find (".flx-rw-hdr input").each (function () {
+					if ($(this).val () !== ""){
+						table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search") + ':not(:contains("' + $(this).val () + '"))').parent ().each (function () {
+							table.find('.flx-rw-cnt .rw-' + $(this).attr ("data-row")).addClass ("hide");
+						});
+					}
+				});
+
+				this._stripes ();
+			};
+
+			// Helper to make the search input visible
+			this._search = function () {
+				var that = this;
+
+				$(window).click (function (event) {
+					if (!$(event.target).hasClass ("onfocus"))
+						$(".onfocus").removeClass("onfocus").toggle ();
+				});
+
+				$(this).find(".flx-rw-hdr .search").each (function () {
+					$(this).click (function () {
+						$(this).addClass("onfocus").toggle ();
+						$(this).siblings ("input").addClass("onfocus").toggle ().focus ().bind ('input', function () {
+							that._filter($(this));
+						});;
+					});
+				});
+			}
+
+			// Assign the search function
+			this._search ();
+		});
+
+		// Return the elements
+		return this;
+	}
+
+	$.extend($.fn.tablesearch, $.fn.table);
 }(jQuery, window, document));
