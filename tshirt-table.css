@@ -63,12 +63,6 @@
 .flx-cl .search { display:block; width:100% }
 .flx-cl input {
 	border:none; background:none; font-size:1em; margin:-2px 0 0; outline:none;
-    -webkit-touch-callout:all;
-    -webkit-user-select:all;
-    -khtml-user-select:all;
-    -moz-user-select:all;
-    -ms-user-select:all;
-    user-select:all;
 	-webkit-appearance:none;
 	-moz-appearance:none;
 	-ms-appearance:none;

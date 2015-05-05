@@ -78,8 +78,8 @@
 									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px">';
 										if (config.find)
 											if (config.find[indexCol]) {
+												html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
 												html += '<span class="search">' + dataRowCol + '</span>';
-												html += '<input type="text" data-search="' + indexCol + '" style="display:none" placeholder="' + dataRowCol + '" />';
 											} else
 												html += '<span>' + dataRowCol + '</span>';
 										else
@@ -92,7 +92,7 @@
 								} else {
 									if (typeof config.align[indexCol] === "function")
 										dataRowCol = config.align[indexCol](indexCol, data[indexRow][indexCol]);
-									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px"><span>' + dataRowCol + '<span></div>';
+									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px"><span>' + dataRowCol + '</span></div>';
 								}
 							} else {
 								arraySubValue = config.width[indexCol].split ("/");
@@ -102,8 +102,8 @@
 									html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + arraySubValue[0] + 'px">';
 										if (config.find)
 											if (config.find[indexCol]) {
+												html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
 												html += '<span class="search">' + dataRowCol + '</span>';
-												html += '<input data-search="' + indexCol + '" type="text" style="display:none" placeholder="' + dataRowCol + '" />';
 											} else
 												html += '<span>' + dataRowCol + '</span>';
 										else
@@ -128,6 +128,14 @@
 										html += '</span>';
 									html += '</div>';
 								}
+							}
+						} else if (config.align[indexCol] === "value") {
+							if (isHead === true) {
+								html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="display:none">';
+									html += '<span>' + dataRowCol + '</span>';
+								html += '</div>';
+							} else {
+								html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="display:none" data-value="' + dataRowCol + '"></div>';
 							}
 						}
 					}
@@ -415,10 +423,11 @@
 
 				$(this).find(".flx-rw-hdr .search").each (function () {
 					$(this).click (function () {
+						$("input").blur ();
 						$(this).addClass("onfocus").toggle ();
 						$(this).siblings ("input").addClass("onfocus").toggle ().focus ().bind ('input', function () {
 							that._filter($(this));
-						});;
+						});
 					});
 				});
 			}
