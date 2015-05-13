@@ -146,7 +146,7 @@
 			}
 
 			// Helper to make the row and column have fix width and height
-			this._fixsize = function () {
+			this._fixsize = function (percentage) {
 				var left = 0,
 					top = 0,
 					width = 0,
@@ -181,7 +181,10 @@
 
 				// Get the top and left freeze points
 				top = $("#" + id + " .flx-tplf").height ();
-				left = $("#" + id + " .flx-tplf").width ();
+				if (percentage)
+					left = ($("#" + id + " .flx-tplf").width () / $("#" + id).width () * 100) + "%";
+				else
+					left = $("#" + id + " .flx-tplf").width ();
 
 				$("#" + id + " .flx-rw-hdr").css ({
 					"height": top
@@ -192,7 +195,7 @@
 				});
 				$("#" + id + " .flx-tprg").css({
 					"height": top,
-					"left": left + this.gap,
+					"left": (percentage) ? left : left + this.gap,
 					"right": 0
 				});
 
@@ -224,7 +227,7 @@
 					"left": 0
 				});
 				$("#" + id + " .flx-btrg").css ({
-					"left": left + this.gap,
+					"left": (percentage) ? left : left + this.gap,
 					"right": 0
 				});
 
@@ -245,6 +248,25 @@
 				$("#" + id + " .flx-tprg > div").css ({
 					"width": width
 				});
+
+				// Set the colloumn width into percentage
+				if (percentage) {
+					$("#" + id + " .flx-tplf .rw-0 .flx-cl").each (function (index) {
+						$("#" + id + " .flx-tplf .cl-" + index).css ({
+							"width": ($(this).width () / $("#" + id + " .flx-tplf").width () * 100) + "%"
+						});
+					});
+
+					$("[data-twin=\"hor" + id + "\"] .flx-rw .flx-cl").each (function (index) {
+						$(this).css ({
+							"width": ($(this).width () / $("[data-twin=\"hor" + id + "\"]").width () * 100) + "%"
+						});
+					});
+
+					$("[data-twin=\"hor" + id + "\"]").css ({
+						"width": "100%"
+					});
+				}
 			}
 
 			// Helper to add odd and event to row
@@ -302,7 +324,10 @@
 				this._stripes ();
 
 				// Make the column and row fixed size
-				this._fixsize ();
+				if ($("#" + this.id).width () > ($("#" + this.id + " .flx-btlf").width () + $("#" + this.id + " .flx-btrg").width ()))
+					this._fixsize (true);
+				else
+					this._fixsize ();
 
 				if (assignscroll) {
 					// Call the scroller, only once to save CPU cycle
@@ -320,7 +345,7 @@
 
 				// Counts
 				this.end = new Date().getTime();
-				console.log ("It tooks " + (this.end - this.start) + " seconds to generate");
+				// console.log ("It tooks " + (this.end - this.start) + " seconds to generate");
 			}
 
 			// Push new data to table
