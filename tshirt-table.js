@@ -32,23 +32,57 @@
 			this.gap = settings.gap;
 			this.rubber = settings.rubber;
 			this.done = settings.done;
+			this.tableWidth = 0;
+			this.tableWidthLeft = 0;
+			this.tableWidthRight = 0;
+			this.wrapperTableWidth = 0;
+			this.smallerTable = false;
 
 			// Helper to draw row and column
 			this._draw = function (data, config, startRow, startCol, endRow, endCol, isHead) {
-				var html = "";
-				var dataAlign = "";
-				var content = "";
+				var html = "",
+					dataAlign = "",
+					content = "",
+					tableWidth = 0,
+					rowWidth = 0;
 
 				data = (!data) ? [] : data;
 
-				if (!data[0]) {
-					data[0] = [];
-				}
+				if (!data[0]) data[0] = [];
 
 				startRow = (startRow === null)? 0: startRow;
 				startCol = (startCol === null)? 0: startCol;
 				endRow = (endRow === null)? data.length: endRow;
 				endCol = (endCol === null)? data[0].length: endCol;
+
+				// Count the table width, only once
+				if (this.tableWidth === 0) {
+					for (var i = this.config.width.length - 1; i >= 0; i--) {
+						if (this.config.width[i].indexOf("/") < 0)
+							tableWidth += parseInt(this.config.width[i]);
+						else {
+							var tempWidth = this.config.width[i].split ("/");
+							tableWidth += parseInt(tempWidth[0]);
+						}
+					};
+
+					this.tableWidth = tableWidth;
+					this.wrapperTableWidth = document.getElementById(this.id).offsetWidth;
+
+					if (this.tableWidth < this.wrapperTableWidth) this.smallerTable = true;
+				}
+
+				// Count the row width, only once
+				if (rowWidth === 0) {
+					for (var indexCol = startCol; indexCol < endCol; indexCol++) {
+						if (config.width[indexCol].indexOf("/") < 0)
+							rowWidth += parseInt(config.width[indexCol]);
+						else {
+							var tempWidth = config.width[indexCol].split ("/");
+							rowWidth += parseInt(tempWidth[0]);
+						}
+					}
+				}
 
 				for (var indexRow = startRow; indexRow < endRow; indexRow++) {
 					var arraySubValue = [],
@@ -58,82 +92,82 @@
 					// Draw one row
 					html += '<div class="flx-rw rw-' + indexRow + '" data-row="' + indexRow + '">';
 					for (var indexCol = startCol; indexCol < endCol; indexCol++) {
-						var dataRowCol = data[indexRow][indexCol];
+						var dataRowCol = data[indexRow][indexCol],
+							columnWidth = 0;
 
 						// Only display non zero width content
 						if (config.width[indexCol] !== "0") {
 							dataAlign = "";
-							if (typeof config.align[indexCol] === "function")
+							if (typeof config.type[indexCol] === "function")
 								dataAlign += "flx-cl-func ";
-							if (config.align[indexCol] === "left")
+							if (config.type[indexCol] === "left")
 								dataAlign += "flx-cl-lf ";
-							if (config.align[indexCol] === "right")
+							if (config.type[indexCol] === "right")
 								dataAlign += "flx-cl-rg ";
-							if (config.align[indexCol] === "center")
+							if (config.type[indexCol] === "center")
 								dataAlign += "flx-cl-ct ";
 
 							// Check if the config says that it have sub value
 							if (config.width[indexCol].indexOf ("/") < 0) {
-								if (isHead === true) {
-									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px">';
-										if (config.find)
-											if (config.find[indexCol]) {
-												html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
-												html += '<span class="search">' + dataRowCol + '</span>';
-											} else
-												html += '<span>' + dataRowCol + '</span>';
-										else
-											html += '<span>' + dataRowCol + '</span>';
-
-										if (config.sort)
-											if (config.sort[indexCol])
-												html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
-									html += '</div>';
-								} else {
-									if (typeof config.align[indexCol] === "function")
-										dataRowCol = config.align[indexCol](indexCol, data[indexRow][indexCol]);
-									html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + config.width[indexCol] + 'px"><span>' + dataRowCol + '</span></div>';
-								}
+								columnWidth = config.width[indexCol];
 							} else {
 								arraySubValue = config.width[indexCol].split ("/");
 								indexesSubValue = arraySubValue[1].split (":");
+								columnWidth = arraySubValue[0];
+							}
 
-								if (isHead === true) {
-									html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + arraySubValue[0] + 'px">';
-										if (config.find)
-											if (config.find[indexCol]) {
-												html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
-												html += '<span class="search">' + dataRowCol + '</span>';
-											} else
-												html += '<span>' + dataRowCol + '</span>';
-										else
+							if (this.smallerTable)
+								columnWidth = (columnWidth / rowWidth * 100) + "%";
+							else
+								columnWidth += "px";
+
+							if (isHead === true) {
+								if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+								else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+									// Column is findable
+									if (config.find)
+										if (config.find[indexCol]) {
+											html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
+											html += '<span class="search">' + dataRowCol + '</span>';
+										} else
 											html += '<span>' + dataRowCol + '</span>';
+									else
+										html += '<span>' + dataRowCol + '</span>';
 
-										if (config.sort)
-											if (config.sort[indexCol])
-												html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
+									// Column is sortable
+									if (config.sort)
+										if (config.sort[indexCol])
+											html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
 
+									// Column have sub content
+									if (config.width[indexCol].indexOf ("/") >= 0) {
 										html += '<span class="sub">';
 											for (var i = 0; i < indexesSubValue.length; i++) {
 												html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
 											}
 										html += '</span>';
-									html += '</div>';
-								} else {
-									html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + arraySubValue[0] + 'px">';
-										html += '<span>' + dataRowCol + '</span>';
+									}
+								html += '</div></div>';
+							} else {
+								if (typeof config.type[indexCol] === "function") dataRowCol = config.type[indexCol](indexCol, data[indexRow][indexCol]);
+
+								if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+								else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+									html += '<span class="cnt">' + dataRowCol + '</span>';
+									if (config.width[indexCol].indexOf ("/") >= 0) {
 										html += '<span class="sub">';
 											for (var i = 0; i < indexesSubValue.length; i++)
 												html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
 										html += '</span>';
-									html += '</div>';
-								}
+									}
+								html += '</div></div>';
 							}
-						} else if (config.align[indexCol] === "value") {
+						}
+
+						// If the type is value, then add aditional hidden column that contain data-value
+						if (config.type[indexCol] === "value") {
 							if (isHead === true) {
-								html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="display:none">';
-									html += '<span>' + dataRowCol + '</span>';
-								html += '</div>';
+								html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="display:none"></div>';
 							} else {
 								html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="display:none" data-value="' + dataRowCol + '"></div>';
 							}
@@ -142,11 +176,14 @@
 					html += '</div>';
 				}
 
-				return html;
+				return {
+					html: html,
+					width: rowWidth
+				}
 			}
 
 			// Helper to make the row and column have fix width and height
-			this._fixsize = function (percentage) {
+			this._fixsize = function () {
 				var left = 0,
 					top = 0,
 					width = 0,
@@ -155,118 +192,99 @@
 					bottomheight = 0,
 					col = this.freezeCol,
 					row = this.freezeRow,
-					id = this.id;
+					id = this.id,
+					el;
 
+				//
 				// Reset size
+				//
 
 				// Set height of the header row so it will have the same row height
-				$("#" + id + " .flx-tprg .flx-rw").each(function (index) {
+				el = document.querySelectorAll("#" + id + " .flx-tprg .flx-rw");
+				for (var index = el.length - 1; index >= 0; index--) {
 					var height = 0,
 						heightlf = 0;
 
 					// Reset the height first
-					$("#" + id + " .flx-tprg .rw-" + index).css ("height", "");
-					$("#" + id + " .flx-tplf .rw-" + index).css ("height", "");
+					document.querySelector("#" + id + " .flx-tprg .rw-" + index).style.height = '';
+					document.querySelector("#" + id + " .flx-tplf .rw-" + index).style.height = '';
 
-					height = $("#" + id + " .flx-tprg .rw-" + index).height (),
-					heightlf = $("#" + id + " .flx-tplf .rw-" + index).height ();
+					height = document.querySelector("#" + id + " .flx-tprg .rw-" + index).offsetHeight;
+					heightlf = document.querySelector("#" + id + " .flx-tplf .rw-" + index).offsetHeight;
 
-					if (heightlf > height)
-						height = heightlf;
-
+					if (heightlf > height) height = heightlf;
 					topheight += height;
 
-					$("#" + id + " .flx-rw-hdr .rw-" + index).css ("height", height);
-				});
+					document.querySelector("#" + id + " .flx-rw-hdr .rw-" + index).style.height = height + "px";
+				}
 
 				// Get the top and left freeze points
-				top = $("#" + id + " .flx-tplf").height ();
-				if (percentage)
-					left = ($("#" + id + " .flx-tplf").width () / $("#" + id).width () * 100) + "%";
+				top = topheight;
+				if (this.smallerTable)
+					left = (this.tableWidthLeft / this.tableWidth * 100) + "%";
 				else
-					left = $("#" + id + " .flx-tplf").width ();
+					left = this.tableWidthLeft + "px";
 
-				$("#" + id + " .flx-rw-hdr").css ({
-					"height": top
-				});
-				$("#" + id + " .flx-tplf").css ({
-					"height": top,
-					"width": left
-				});
-				$("#" + id + " .flx-tprg").css({
-					"height": top,
-					"left": (percentage) ? left : left + this.gap,
-					"right": 0
-				});
+				el = document.querySelector("#" + id + " .flx-rw-hdr");
+				el.style.height = top + "px";
+				el = document.querySelector("#" + id + " .flx-tplf");
+				el.style.width = left;
+				el = document.querySelector("#" + id + " .flx-tprg");
+				el.style.height = top + "px";
+				if (this.smallerTable) el.style.left = left;
+				else el.style.left = (left + this.gap) + "px";
+				el.style.right = 0;
 
 				// Set height of the content row so it will have the same row height
-				$("#" + id + " .flx-btrg .flx-rw").each(function (index) {
+				el = document.querySelectorAll("#" + id + " .flx-btrg .flx-rw");
+				for (var index = el.length - 1; index >= 0; index--) {
 					var height = 0,
-						heightlf = 0;
+						heightlf = 0,
+						_index;
 
-					index = index + row;
+					_index = index + row;
 
 					// Reset the height first
-					$("#" + id + " .flx-btrg .rw-" + index).css ("height", "");
-					$("#" + id + " .flx-btlf .rw-" + index).css ("height", "");
+					document.querySelector("#" + id + " .flx-btrg .rw-" + _index).style.height = '';
+					document.querySelector("#" + id + " .flx-btlf .rw-" + _index).style.height = '';
 
-					height = $("#" + id + " .flx-btrg .rw-" + index).height (),
-					heightlf = $("#" + id + " .flx-btlf .rw-" + index).height ();
+					height = document.querySelector("#" + id + " .flx-btrg .rw-" + _index).offsetHeight,
+					heightlf = document.querySelector("#" + id + " .flx-btlf .rw-" + _index).offsetHeight;
 
-					if (heightlf > height)
-						height = heightlf;
+					if (heightlf > height) height = heightlf;
+					bottomheight += height; // unused for now
 
-					bottomheight += height;
-
-					$("#" + id + " .flx-rw-cnt .rw-" + index).css ("height", height);
-				});
+					document.querySelector("#" + id + " .flx-rw-cnt .flx-btlf .rw-" + _index).style.height = height + "px";
+					document.querySelector("#" + id + " .flx-rw-cnt .flx-btrg .rw-" + _index).style.height = height + "px";
+				}
 
 				// Make the bottom left and bottom right content to have fix width and height
-				$("#" + id + " .flx-btlf").css ({
-					"width": left,
-					"left": 0
-				});
-				$("#" + id + " .flx-btrg").css ({
-					"left": (percentage) ? left : left + this.gap,
-					"right": 0
-				});
+				el = document.querySelector("#" + id + " .flx-btlf");
+				el.style.width = left;
+				el.style.left = 0;
+				el = document.querySelector("#" + id + " .flx-btrg");
+				if (this.smallerTable) el.style.left = left;
+				else el.style.left = (left + this.gap) + "px";
+				el.style.right = 0;
 
-				$("#" + id + " .tbl-scrl-ver").css ({
-					"top": top + this.gap,
-					"bottom": 0,
-					"left": 0,
-					"right": 0
-				});
+				el = document.querySelector("#" + id + " .tbl-scrl-ver");
+
+				el.style.top = (top + this.gap) + "px";
+				el.style.bottom = 0;
+				el.style.left = 0;
+				el.style.right = 0;
 
 				// Make the scroll area the exact width as the content
-				$("#" + id + " .flx-btrg > div > div").css("position", "absolute").each (function () {
-					width = parseInt($(this).width ());
-				}).css("position", "");
-				$("#" + id + " .flx-btrg > div").css ({
-					"width": width
-				});
-				$("#" + id + " .flx-tprg > div").css ({
-					"width": width
-				});
-
-				// Set the colloumn width into percentage
-				if (percentage) {
-					$("#" + id + " .flx-tplf .rw-0 .flx-cl").each (function (index) {
-						$("#" + id + " .flx-tplf .cl-" + index).css ({
-							"width": ($(this).width () / $("#" + id + " .flx-tplf").width () * 100) + "%"
-						});
-					});
-
-					$("[data-twin=\"hor" + id + "\"] .flx-rw .flx-cl").each (function (index) {
-						$(this).css ({
-							"width": ($(this).width () / $("[data-twin=\"hor" + id + "\"]").width () * 100) + "%"
-						});
-					});
-
-					$("[data-twin=\"hor" + id + "\"]").css ({
-						"width": "100%"
-					});
-				}
+				el = document.querySelector("#" + id + " .flx-btrg > div");
+				if (this.smallerTable)
+					el.style.width = "100%";
+				else
+					el.style.width = this.tableWidthRight;
+				el = document.querySelector("#" + id + " .flx-tprg > div");
+				if (this.smallerTable)
+					el.style.width = "100%";
+				else
+					el.style.width = this.tableWidthRight + "px";
 			}
 
 			// Helper to add odd and event to row
@@ -279,9 +297,10 @@
 			// Helper to draw the table and add scroll function
 			this.draw = function () {
 				var html = "",
-					assignscroll = false;
+					assignscroll = false,
+					tableWidth = 0;
 
-				if ($(this).find (".flx-rw-hdr").length === 0) {
+				if (this.querySelector(".flx-rw-hdr") === null) {
 					// Draw the header
 					html += '<div class="flx-rw-hdr">';
 						html += '<div class="flx-tplf">';
@@ -315,19 +334,22 @@
 					assignscroll = true;
 				}
 
-				$(this).find(".flx-tplf").html(this._draw (this.data, this.config, 0, 0, this.freezeRow, this.freezeCol, true));
-				$(this).find(".flx-tprg > div").html(this._draw (this.data, this.config, 0, this.freezeCol, this.freezeRow, null, true));
-				$(this).find(".flx-btlf").html(this._draw (this.data, this.config, this.freezeRow, 0, null, this.freezeCol, false));
-				$(this).find(".flx-btrg > div").html(this._draw (this.data, this.config, this.freezeRow, this.freezeCol, null, null, false));
+				html = this._draw (this.data, this.config, 0, 0, this.freezeRow, this.freezeCol, true);
+				this.querySelector(".flx-tplf").innerHTML = html.html;
+				this.tableWidthLeft = html.width;
+				html = this._draw (this.data, this.config, 0, this.freezeCol, this.freezeRow, null, true);
+				this.querySelector(".flx-tprg > div").innerHTML = html.html
+				this.tableWidthRight = html.width;
+				html = this._draw (this.data, this.config, this.freezeRow, 0, null, this.freezeCol, false);
+				this.querySelector(".flx-btlf").innerHTML = html.html;
+				html = this._draw (this.data, this.config, this.freezeRow, this.freezeCol, null, null, false);
+				this.querySelector(".flx-btrg > div").innerHTML = html.html;
 
 				// Apply odd and even
 				this._stripes ();
 
 				// Make the column and row fixed size
-				if ($("#" + this.id).width () > ($("#" + this.id + " .flx-btlf").width () + $("#" + this.id + " .flx-btrg").width ()))
-					this._fixsize (true);
-				else
-					this._fixsize ();
+				this._fixsize ();
 
 				if (assignscroll) {
 					// Call the scroller, only once to save CPU cycle
@@ -345,7 +367,6 @@
 
 				// Counts
 				this.end = new Date().getTime();
-				// console.log ("It tooks " + (this.end - this.start) + " seconds to generate");
 			}
 
 			// Push new data to table

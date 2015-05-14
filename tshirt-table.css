@@ -58,7 +58,8 @@
 .flx-rw-hd,
 .flx-rw-cnt { background-color:transparent!important }
 
-.flx-cl { position:relative; font-size:1.2em; color:#50526C; padding:10px; line-height:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.flx-cl { position:relative }
+.flx-cl .pad { font-size:1.2em; color:#50526C; padding:10px; line-height:22px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
 .flx-cl input,
 .flx-cl .search { display:block; width:100% }
 .flx-cl input {

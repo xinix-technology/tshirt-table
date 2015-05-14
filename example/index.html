@@ -153,14 +153,14 @@
 
 		var tbl = $(".table").table ({
 			freezeRow: 1,
-			freezeCol: 1,
+			freezeCol: 2,
 			config : {
 				width: 	["50", 		"300/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
-				align: 	[humanNum, 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""]
+				type: 	[humanNum, 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""]
 			},
 			data: _data,
 			done: function () {
-				console.log ("Table 1 done");
+				console.log ("It tooks " + (this.end - this.start) + " seconds to generate table 1");
 			}
 		});
 
@@ -182,13 +182,13 @@
 			freezeCol: 1,
 			config : {
 				width: 	["50", 		"300/2:3:4", 	"0", 			"0", 		"0", 		"150", 			"150", 		"200/8", 		"0"],
-				align: 	[humanNum, 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""],
+				type: 	[humanNum, 	"left", 		"", 			"", 		"", 		"left", 		"left", 	"right", 		""],
 				sort: 	[false, 	true, 			false, 			false, 		false, 		true, 			true, 		true, 			false],
 				find: 	[false, 	true, 			false, 			false, 		false, 		true, 			true, 		false, 			false]
 			},
 			data: _data,
 			done: function () {
-				console.log ("Table 2 done");
+				console.log ("It tooks " + (this.end - this.start) + " seconds to generate table 2");
 			}
 		});
 		$("#newrows2").click (function () {
