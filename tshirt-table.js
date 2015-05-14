@@ -223,7 +223,7 @@
 				if (this.smallerTable)
 					left = (this.tableWidthLeft / this.tableWidth * 100) + "%";
 				else
-					left = this.tableWidthLeft + "px";
+					left = (this.tableWidthLeft + this.gap) + "px";
 
 				el = document.querySelector("#" + id + " .flx-rw-hdr");
 				el.style.height = top + "px";
@@ -232,7 +232,7 @@
 				el = document.querySelector("#" + id + " .flx-tprg");
 				el.style.height = top + "px";
 				if (this.smallerTable) el.style.left = left;
-				else el.style.left = (left + this.gap) + "px";
+				else el.style.left = left;
 				el.style.right = 0;
 
 				// Set height of the content row so it will have the same row height
@@ -264,7 +264,7 @@
 				el.style.left = 0;
 				el = document.querySelector("#" + id + " .flx-btrg");
 				if (this.smallerTable) el.style.left = left;
-				else el.style.left = (left + this.gap) + "px";
+				else el.style.left = left;
 				el.style.right = 0;
 
 				el = document.querySelector("#" + id + " .tbl-scrl-ver");
@@ -275,12 +275,12 @@
 				el.style.right = 0;
 
 				// Make the scroll area the exact width as the content
-				el = document.querySelector("#" + id + " .flx-btrg > div");
+				el = document.querySelector("#" + id + " .flx-tprg > div");
 				if (this.smallerTable)
 					el.style.width = "100%";
 				else
-					el.style.width = this.tableWidthRight;
-				el = document.querySelector("#" + id + " .flx-tprg > div");
+					el.style.width = this.tableWidthRight + "px";
+				el = document.querySelector("#" + id + " .flx-btrg > div");
 				if (this.smallerTable)
 					el.style.width = "100%";
 				else
