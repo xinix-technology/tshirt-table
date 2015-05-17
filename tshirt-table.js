@@ -29,6 +29,7 @@
 			this.freezeCol = settings.freezeCol;
 			this.config = settings.config;
 			this.data = settings.data;
+			this.realdata = settings.data;
 			this.gap = settings.gap;
 			this.rubber = settings.rubber;
 			this.done = settings.done;
@@ -294,11 +295,8 @@
 				$(this).find (".flx-rw-cnt .flx-rw:visible:even").addClass ("even");
 			}
 
-			// Helper to draw the table and add scroll function
-			this.draw = function () {
-				var html = "",
-					assignscroll = false,
-					tableWidth = 0;
+			this._drawStructure = function () {
+				var html = "";
 
 				if (this.querySelector(".flx-rw-hdr") === null) {
 					// Draw the header
@@ -331,8 +329,15 @@
 					// Faster than .html ()
 					this.innerHTML = html;
 
-					assignscroll = true;
+					return true;
 				}
+
+				return false;
+			}
+
+			// Helper to draw the table and add scroll function
+			this._drawHead = function () {
+				var html = "";
 
 				html = this._draw (this.data, this.config, 0, 0, this.freezeRow, this.freezeCol, true);
 				this.querySelector(".flx-tplf").innerHTML = html.html;
@@ -340,10 +345,23 @@
 				html = this._draw (this.data, this.config, 0, this.freezeCol, this.freezeRow, null, true);
 				this.querySelector(".flx-tprg > div").innerHTML = html.html
 				this.tableWidthRight = html.width;
+			}
+			this._drawBody = function () {
+				var html = "";
+
 				html = this._draw (this.data, this.config, this.freezeRow, 0, null, this.freezeCol, false);
 				this.querySelector(".flx-btlf").innerHTML = html.html;
 				html = this._draw (this.data, this.config, this.freezeRow, this.freezeCol, null, null, false);
 				this.querySelector(".flx-btrg > div").innerHTML = html.html;
+			}
+			this.draw = function () {
+				var html = "",
+					assignscroll = false,
+					tableWidth = 0;
+
+				assignscroll = this._drawStructure ();
+				this._drawHead ();
+				this._drawBody ();
 
 				// Apply odd and even
 				this._stripes ();
@@ -441,7 +459,7 @@
 
 		this.each(function () {
 			// Filtering the list
-			this._filter = function (target) {
+			this._filter = function () {
 				var filters = 0,
 					table = $(this);
 
@@ -455,6 +473,7 @@
 					}
 				});
 
+				// Fix the stripes
 				this._stripes ();
 			};
 
@@ -462,24 +481,76 @@
 			this._search = function () {
 				var that = this;
 
+				// Show the title again if input filter is empty
 				$(window).click (function (event) {
-					if (!$(event.target).hasClass ("onfocus"))
-						$(".onfocus").removeClass("onfocus").toggle ();
+					if (!$(event.target).hasClass("search")) {
+						$(that).find(".flx-rw-hdr input.onfocus").each (function () {
+							if ($(this).val() === "") {
+								$(this).removeClass("onfocus").toggle ();
+								$(this).siblings (".search").removeClass("onfocus").toggle ();
+							}
+						});
+					}
 				});
 
-				$(this).find(".flx-rw-hdr .search").each (function () {
+				// Make sure the input will be focus
+				$(that).find(".flx-rw-hdr input").click (function () {
+					$(this).focus();
+				});
+
+				// Display input filter on title click
+				$(that).find(".flx-rw-hdr .search").each (function () {
 					$(this).click (function () {
-						$("input").blur ();
-						$(this).addClass("onfocus").toggle ();
-						$(this).siblings ("input").addClass("onfocus").toggle ().focus ().bind ('input', function () {
-							that._filter($(this));
+						$(that).find("input").blur ();
+
+						$(this).addClass("onfocus").hide ();
+						$(this).siblings ("input").addClass("onfocus").show ().focus ().bind ('input', function () {
+							that._filter();
 						});
+					});
+				});
+			}
+
+			// Helper to sort
+			this._sort = function () {
+				var that = this,
+					dataHead = [_.first(that.data)];
+
+				$(that).find(".flx-rw-hdr .sort").each (function () {
+					$(this).click (function () {
+						if ($(this).hasClass("asc")) {
+							$(that).find(".flx-rw-hdr .sort").removeClass ("asc desc");
+							$(this).addClass("desc");
+							// Sort the data DESC
+							that.data = dataHead.concat(_.sortBy(_.rest(that.data), parseInt($(this).data("sort"))).reverse());
+						} else if ($(this).hasClass("desc")) {
+							$(that).find(".flx-rw-hdr .sort").removeClass ("asc desc");
+							// Don't Sort
+							that.data = that.realdata;
+						} else {
+							$(that).find(".flx-rw-hdr .sort").removeClass ("asc desc");
+							$(this).addClass("asc");
+							// Sort the data ASC
+							that.data = dataHead.concat(_.sortBy(_.rest(that.data), parseInt($(this).data("sort"))));
+						}
+
+						// Only draw the body
+						that._drawBody ();
+
+						// Assign fix size
+						that._fixsize ();
+
+						// Assign filter again
+						that._filter ();
 					});
 				});
 			}
 
 			// Assign the search function
 			this._search ();
+
+			// Assign the sort function
+			this._sort ();
 		});
 
 		// Return the elements

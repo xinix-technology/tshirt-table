@@ -1,6 +1,6 @@
 {
   "name": "tshirt-table",
-  "version": "0.0.4",
+  "version": "0.0.6",
   "homepage": "https://github.com/xinix-technology/tshirt-table",
   "authors": [
     "Dwan <me@dwaan.com>"
@@ -27,6 +27,7 @@
     "tests"
   ],
   "dependencies": {
-    "tshirt-scroll": "*"
+    "tshirt-scroll": "*",
+    "underscore": "*"
   }
 }
