@@ -152,6 +152,8 @@
 							} else {
 								if (typeof config.type[indexCol] === "function") dataRowCol = config.type[indexCol](indexCol, data[indexRow][indexCol]);
 
+								if (dataRowCol === undefined) dataRowCol = "-";
+
 								if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
 								else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
 									html += '<span class="cnt">' + dataRowCol + '</span>';
@@ -188,6 +190,7 @@
 				var left = 0,
 					top = 0,
 					width = 0,
+					widthRight = 0,
 					height = 0,
 					topheight = 0,
 					bottomheight = 0,

@@ -45,7 +45,7 @@
 .flx-btlf,
 .flx-btrg { float:left }
 
-.flx-rw-hdr { font-weight:600 }
+.flx-rw-hdr { font-weight:600; position:absolute; left:0; right:0 }
 .flx-rw-hdr .flx-rw { margin:0; background-color:rgba(0,0,0,0.16) }
 .flx-rw-hdr .flx-rw .flx-cl { overflow:hidden }
 .flx-rw-hdr .flx-rw .sub { display:none }
