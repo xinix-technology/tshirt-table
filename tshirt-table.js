@@ -17,6 +17,7 @@
 				data: {},
 				gap: 1,
 				rubber: true,
+				highlight: true,
 				done: function (data) {}
 			},
 			settings = $.extend({}, defaults, options);
@@ -32,6 +33,7 @@
 			this.realdata = settings.data;
 			this.gap = settings.gap;
 			this.rubber = settings.rubber;
+			this.highlight = settings.highlight;
 			this.done = settings.done;
 			this.tableWidth = 0;
 			this.tableWidthLeft = 0;
@@ -462,17 +464,44 @@
 
 		this.each(function () {
 			// Filtering the list
-			this._filter = function () {
-				var filters = 0,
-					table = $(this);
+			this._filter = function (elem) {
+				var that = this,
+					filters = 0,
+					table = $(this),
+					input = table.find(".flx-rw-hdr input");
+
+				// Only actively search one input
+				if (elem) input = elem;
 
 				table.find('.flx-rw-cnt .flx-rw').removeClass ('hide');
 				// Search the column that contain the string
-				table.find (".flx-rw-hdr input").each (function () {
-					if ($(this).val () !== ""){
-						table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search") + ':not(:contains("' + $(this).val () + '"))').parent ().each (function () {
+				input.each (function () {
+					var search = $(this).val ();
+
+					if (search !== "") {
+						if (that.highlight) {
+							var contains = table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search") + ':contains("' + search + '")'),
+								filterText = "";
+
+							contains.find ("span.cnt, span.sub > span").each (function () {
+								filterText = this.textContent || this.innerText;
+								filterText = filterText.replace(new RegExp(search, 'gi'), '<strong>$&</strong>');
+								this.innerHTML = filterText;
+							});
+						}
+						table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search") + ':not(:contains("' + search + '"))').parent ().each (function () {
 							table.find('.flx-rw-cnt .rw-' + $(this).attr ("data-row")).addClass ("hide");
 						});
+					} else {
+						if (that.highlight) {
+							console.log ("empty");
+
+							table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search")).find ("span.cnt, span.sub > span").each (function () {
+								if (this.textContent) this.textContent = this.textContent;
+								else if (this.innerText) this.innerText = this.innerText;
+								else $(this).text ($(this).text());
+							});
+						}
 					}
 				});
 
@@ -508,7 +537,7 @@
 
 						$(this).addClass("onfocus").hide ();
 						$(this).siblings ("input").addClass("onfocus").show ().focus ().bind ('input', function () {
-							that._filter();
+							that._filter($(this));
 						});
 					});
 				});
