@@ -31,11 +31,13 @@
 .flx-rw-cnt .flx-rw.even { background-color:rgba(0,0,0,0.08) }
 
 .flx-cl-lf { text-align:left }
-.flx-cl-rg { text-align:right }
-.flx-cl-ct { text-align:center }
-.flx-cl-mr .sub { display:block; font-size:0.8em }
-.flx-cl-mr .sub span { padding:0 8px 0 0 }
-.flx-cl-mr.flx-cl-rg .sub span { padding:0 0 0 8px }
+.flx-cl-rg,
+.flx-cl-rg input { text-align:right }
+.flx-cl-ct,
+.flx-cl-ct input{ text-align:center }
+.flx-cl .sub { display:block; font-size:0.8em }
+.flx-cl .sub span { padding:0 8px 0 0 }
+.flx-cl.flx-cl-rg .sub span { padding:0 0 0 8px }
 
 .flx-tplf,
 .flx-tprg,

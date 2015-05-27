@@ -494,8 +494,6 @@
 						});
 					} else {
 						if (that.highlight) {
-							console.log ("empty");
-
 							table.find('.flx-rw-cnt .cl-' + $(this).attr("data-search")).find ("span.cnt, span.sub > span").each (function () {
 								if (this.textContent) this.textContent = this.textContent;
 								else if (this.innerText) this.innerText = this.innerText;
