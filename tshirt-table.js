@@ -391,7 +391,7 @@
 						else if (percentageY > 1) percentageY = 1;
 
 						vslider.style.opacity = 1;
-						vslider.style.top = (vscrollbar.offsetHeight - vslider.offsetHeight) * percentageY;
+						vslider.style.top = ((vscrollbar.offsetHeight - vslider.offsetHeight) * percentageY) + "px";
 						vslider.style.transition = transition;
 
 						clearTimeout(vscrollbartimeout);
@@ -405,7 +405,7 @@
 						if (percentageX > 1) percentageX = 1;
 
 						hslider.style.opacity = 1;
-						hslider.style.left = (hscrollbar.offsetWidth - hslider.offsetWidth) * percentageX;
+						hslider.style.left = ((hscrollbar.offsetWidth - hslider.offsetWidth) * percentageX) + "px";
 						hslider.style.transition = transition;
 
 						clearTimeout(hscrollbartimeout);
@@ -444,8 +444,8 @@
 					if (hsliderwidth < 32) hsliderwidth = 32;
 					if (vsliderheight < 32) vsliderheight = 32;
 
-					that.querySelector(".hslider").style.width = hsliderwidth * that.querySelector(".hscrollbar").offsetWidth / 100;
-					that.querySelector(".vslider").style.height = vsliderheight * that.querySelector(".vscrollbar").offsetHeight / 100;
+					that.querySelector(".hslider").style.width = (hsliderwidth * that.querySelector(".hscrollbar").offsetWidth / 100) + "px";
+					that.querySelector(".vslider").style.height = (vsliderheight * that.querySelector(".vscrollbar").offsetHeight / 100) + "px";
 
 					// Call the scroller, only once to save CPU cycle
 					$(that).find (".tbl-scrl-hor > div").scroll ({
