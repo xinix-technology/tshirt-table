@@ -376,7 +376,9 @@
 					timer = 512;
 
 				// Scroll element,
-				var deltaX = 0,
+				var oldPosX = 0,
+					oldPosY = 0,
+					deltaX = 0,
 					deltaY = 0,
 					scrollPosX = 0,
 					scrollPosY = 0,
@@ -456,7 +458,10 @@
 								hscrollbar = that.querySelector(".hscrollbar"),
 								percentageX = Math.abs(posX / (that.querySelector(".tbl-scrl-hor > div").offsetWidth - that.querySelector(".tbl-scrl-hor").offsetWidth));
 
-							updateHScrollPosition (hslider, hscrollbar, percentageX, transition);
+							if (posX != oldPosX) {
+								oldPosX = posX;
+								updateHScrollPosition (hslider, hscrollbar, percentageX, transition);
+							}
 						}
 					});
 					$(that).find (".tbl-scrl-ver > div").scroll ({
@@ -469,7 +474,10 @@
 								vscrollbar = that.querySelector(".vscrollbar"),
 								percentageY = Math.abs(posY / (that.querySelector(".tbl-scrl-ver > div").offsetHeight - that.querySelector(".tbl-scrl-ver").offsetHeight));
 
-							updateVScrollPosition (vslider, vscrollbar, percentageY, transition);
+							if (posY != oldPosY) {
+								oldPosY = posY;
+								updateVScrollPosition (vslider, vscrollbar, percentageY, transition);
+							}
 						}
 					});
 
