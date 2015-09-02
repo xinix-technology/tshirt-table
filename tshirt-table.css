@@ -80,8 +80,8 @@
 .flx-cl input { cursor:text }
 
 .scrollbar { position:absolute }
-.vscrollbar { top:0; bottom:8px; left:initial; right:0; width:8 }
-.hscrollbar { top:initial; bottom:0; left:0; right:8px; height:8 }
+.vscrollbar { top:0; bottom:8px; left:initial; right:0; width:8px }
+.hscrollbar { top:initial; bottom:0; left:0; right:8px; height:8px }
 .scrollbar .hslider,
 .scrollbar .vslider {
 	position:absolute; top:0; left:0; background:rgba(0,0,0,0.48); border:1px solid rgba(255,255,255,0.48); opacity:0; cursor:pointer;
