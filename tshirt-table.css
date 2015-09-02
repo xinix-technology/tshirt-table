@@ -78,3 +78,30 @@
 .flx-cl,
 .flx-cl span { cursor:pointer }
 .flx-cl input { cursor:text }
+
+.scrollbar { position:absolute }
+.vscrollbar { top:0; bottom:8px; left:initial; right:0; width:8 }
+.hscrollbar { top:initial; bottom:0; left:0; right:8px; height:8 }
+.scrollbar .hslider,
+.scrollbar .vslider {
+	position:absolute; top:0; left:0; background:rgba(0,0,0,0.48); border:1px solid rgba(255,255,255,0.48); opacity:0; cursor:pointer;
+	-webkit-border-radius:8px;
+	-moz-border-radius:8px;
+	-ms-border-radius:8px;
+	border-radius:8px;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	box-sizing:border-box;
+	-webkit-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
+	-moz-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
+	-ms-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
+	transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
+}
+.scrollbar.hover .hslider,
+.scrollbar.hover .vslider,
+.scrollbar:hover .hslider,
+.scrollbar:hover .vslider { opacity:1 }
+.scrollbar .hslider { width:0; height:8px }
+.scrollbar .vslider { width:8px; height:0 }
+

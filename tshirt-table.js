@@ -1,6 +1,11 @@
 (function ($, window, document) {
 	"use strict";
 
+	// Global variable
+	window.scrolltimeout = null;
+	window.vscrollbartimeout =  null;
+	window.hscrollbartimeout =  null;
+
 	// Case Insensitive contains pseudo selector
 	$.expr[":"].contains = $.expr.createPseudo(function(arg) {
 		return function( elem ) {
@@ -328,6 +333,10 @@
 						html += '</div>';
 					html += '</div>';
 
+					// Draw scrollbar
+					html += "<div class='scrollbar hscrollbar'><div class='hslider'></div></div>"
+					html += "<div class='scrollbar vscrollbar'><div class='vslider'></div></div>"
+
 					// Put it to the HTML
 					this.className += " flx-tbl";
 
@@ -362,34 +371,161 @@
 			this.draw = function () {
 				var html = "",
 					assignscroll = false,
-					tableWidth = 0;
+					tableWidth = 0,
+					that = this,
+					timer = 512;
 
-				assignscroll = this._drawStructure ();
-				this._drawHead ();
-				this._drawBody ();
+				// Scroll element,
+				var deltaX = 0,
+					deltaY = 0,
+					scrollPosX = 0,
+					scrollPosY = 0,
+					scrollMapX = 0,
+					scrollMapY = 0;
+
+				// Common scrollbar helper
+				var updateVScrollPosition = function (vslider, vscrollbar, percentageY, transition) {
+						if (percentageY < 0) percentageY = 0;
+						else if (percentageY > 1) percentageY = 1;
+
+						vslider.style.opacity = 1;
+						vslider.style.top = (vscrollbar.offsetHeight - vslider.offsetHeight) * percentageY;
+						vslider.style.transition = transition;
+
+						clearTimeout(vscrollbartimeout);
+						vscrollbartimeout = setTimeout (function () {
+							clearTimeout(vscrollbartimeout);
+							vslider.style.opacity = "";
+							vslider.style.transition = "";
+						}, (timer + (timer / 4)));
+					}, updateHScrollPosition = function (hslider, hscrollbar, percentageX, transition) {
+						if (percentageX < 0) percentageX = 0;
+						if (percentageX > 1) percentageX = 1;
+
+						hslider.style.opacity = 1;
+						hslider.style.left = (hscrollbar.offsetWidth - hslider.offsetWidth) * percentageX;
+						hslider.style.transition = transition;
+
+						clearTimeout(hscrollbartimeout);
+						hscrollbartimeout = setTimeout (function () {
+							clearTimeout(hscrollbartimeout);
+							hslider.style.opacity = "";
+							hslider.style.transition = "";
+						}, (timer + (timer / 4)));
+					};
+
+				// Helper content position
+				var updateContentPosition = function (elem, posX, posY, scaleX, scaleY, originX, originY, transition) {
+						$(elem).css ({
+							"transform": "translate3d(" + posX + "px," + posY + "px,0) scale3d(" + scaleX + "," + scaleY + ",1)",
+							"transform-origin": originX + "% " + originY + "%",
+							"transition": transition
+						});
+					};
+
+				assignscroll = that._drawStructure ();
+				that._drawHead ();
+				that._drawBody ();
 
 				// Apply odd and even
-				this._stripes ();
+				that._stripes ();
 
 				// Make the column and row fixed size
-				this._fixsize ();
+				that._fixsize ();
 
 				if (assignscroll) {
+					// Create scrollbar
+					var hsliderwidth = (that.querySelector(".tbl-scrl-hor").offsetWidth / that.querySelector(".tbl-scrl-hor > div").offsetWidth * 100),
+						vsliderheight = (that.querySelector(".tbl-scrl-ver").offsetHeight / that.querySelector(".tbl-scrl-ver > div").offsetHeight * 100);
+
+					// Constrain the slider size so it won't be to small
+					if (hsliderwidth < 32) hsliderwidth = 32;
+					if (vsliderheight < 32) vsliderheight = 32;
+
+					that.querySelector(".hslider").style.width = hsliderwidth * that.querySelector(".hscrollbar").offsetWidth / 100;
+					that.querySelector(".vslider").style.height = vsliderheight * that.querySelector(".vscrollbar").offsetHeight / 100;
+
 					// Call the scroller, only once to save CPU cycle
-					$(this).find (".tbl-scrl-hor > div").scroll ({
+					$(that).find (".tbl-scrl-hor > div").scroll ({
 						scrollVertical: false,
 						scrollHorizontal: true,
-						rubber: this.rubber
+						showScroll: false,
+						rubber: that.rubber,
+						onScroll:function (posX, posY, scaleX, scaleY, originX, originY, transition, state) {
+							var hslider = that.querySelector(".hslider"),
+								hscrollbar = that.querySelector(".hscrollbar"),
+								percentageX = Math.abs(posX / (that.querySelector(".tbl-scrl-hor > div").offsetWidth - that.querySelector(".tbl-scrl-hor").offsetWidth));
+
+							updateHScrollPosition (hslider, hscrollbar, percentageX, transition);
+						}
 					});
-					$(this).find (".tbl-scrl-ver > div").scroll ({
+					$(that).find (".tbl-scrl-ver > div").scroll ({
 						scrollVertical: true,
 						scrollHorizontal: false,
-						rubber: this.rubber
+						showScroll: false,
+						rubber: that.rubber,
+						onScroll:function (posX, posY, scaleX, scaleY, originX, originY, transition, state) {
+							var vslider = that.querySelector(".vslider"),
+								vscrollbar = that.querySelector(".vscrollbar"),
+								percentageY = Math.abs(posY / (that.querySelector(".tbl-scrl-ver > div").offsetHeight - that.querySelector(".tbl-scrl-ver").offsetHeight));
+
+							updateVScrollPosition (vslider, vscrollbar, percentageY, transition);
+						}
+					});
+
+					// Scrollbar actions
+					$(this).find(".hslider").hammer().on("dragstart drag dragend tap", function(event) {
+						var hslider = that.querySelector(".hslider"),
+							hscrollbar = that.querySelector(".hscrollbar"),
+							percentageX = 0;
+
+						if (event.type === "dragstart") {
+							// Constrain movement
+							scrollPosX = scrollMapX = parseInt($(this).position().left);
+						}
+						if (event.type === 'drag' || event.type === 'dragend') {
+							// Count movement delta
+							deltaX = -event.gesture.deltaX;
+							// Constrain movement
+							scrollPosX = scrollMapX - deltaX;
+						}
+
+						if (scrollPosX < 0) scrollPosX = 0;
+						if (scrollPosX > (hscrollbar.offsetWidth - hslider.offsetWidth)) scrollPosX = hscrollbar.offsetWidth - hslider.offsetWidth;
+
+						percentageX = Math.abs(scrollPosX / (hscrollbar.offsetWidth - hslider.offsetWidth));
+
+						updateHScrollPosition (hslider, hscrollbar, percentageX, "all 0s linear");
+						updateContentPosition ($(that).find(".tbl-scrl-hor > div"), percentageX * (that.querySelector(".tbl-scrl-hor").offsetWidth - that.querySelector(".tbl-scrl-hor > div").offsetWidth), 0, 1, 1, 0, 0, "all 0s linear") ;
+					});
+					$(this).find(".vslider").hammer().on("dragstart drag dragend tap", function(event) {
+						var vslider = that.querySelector(".vslider"),
+							vscrollbar = that.querySelector(".vscrollbar"),
+							percentageY = 0;
+
+						if (event.type === "dragstart") {
+							// Constrain movement
+							scrollPosY = scrollMapY = parseInt($(this).position().top);
+						}
+						if (event.type === 'drag' || event.type === 'dragend') {
+							// Count movement delta
+							deltaY = -event.gesture.deltaY;
+							// Constrain movement
+							scrollPosY = scrollMapY - deltaY;
+						}
+
+						if (scrollPosY < 0) scrollPosY = 0;
+						if (scrollPosY > (vscrollbar.offsetHeight - vslider.offsetHeight)) scrollPosY = vscrollbar.offsetHeight - vslider.offsetHeight;
+
+						percentageY = Math.abs(scrollPosY / (vscrollbar.offsetHeight - vslider.offsetHeight));
+
+						updateVScrollPosition (vslider, vscrollbar, percentageY, "all 0s linear");
+						updateContentPosition ($(that).find(".tbl-scrl-ver > div"), 0, percentageY * (that.querySelector(".tbl-scrl-ver").offsetHeight - that.querySelector(".tbl-scrl-ver > div").offsetHeight), 1, 1, 0, 0, "all 0s linear") ;
 					});
 				}
 
 				// Counts
-				this.end = new Date().getTime();
+				that.end = new Date().getTime();
 			}
 
 			// Push new data to table

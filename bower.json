@@ -26,8 +26,9 @@
     "test",
     "tests"
   ],
-  "dependencies": {
-    "tshirt-scroll": "*",
-    "underscore": "*"
+  "devDependencies": {
+    "tshirt-scroll": "1.0.x",
+    "underscore": "1.8.x",
+    "lato": "~0.3.x"
   }
 }
