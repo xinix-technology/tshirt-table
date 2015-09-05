@@ -391,7 +391,11 @@
 						else if (percentageY > 1) percentageY = 1;
 
 						vslider.style.opacity = 1;
-						vslider.style.top = ((vscrollbar.offsetHeight - vslider.offsetHeight) * percentageY) + "px";
+						vslider.style.transform = "translate3d(0px," + ((vscrollbar.offsetHeight - vslider.offsetHeight) * percentageY) + "px,0)";
+						vslider.style.webkitTransform = vslider.style.transform;
+						vslider.style.mozTransform = vslider.style.transform;
+						vslider.style.msTransform = vslider.style.transform;
+						vslider.style.oTransform = vslider.style.transform;
 						vslider.style.transition = transition;
 
 						clearTimeout(vscrollbartimeout);
@@ -405,7 +409,11 @@
 						if (percentageX > 1) percentageX = 1;
 
 						hslider.style.opacity = 1;
-						hslider.style.left = ((hscrollbar.offsetWidth - hslider.offsetWidth) * percentageX) + "px";
+						hslider.style.transform = "translate3d(" + ((hscrollbar.offsetWidth - hslider.offsetWidth) * percentageX) + "px,0px,0)";
+						hslider.style.webkitTransform = hslider.style.transform;
+						hslider.style.mozTransform = hslider.style.transform;
+						hslider.style.msTransform = hslider.style.transform;
+						hslider.style.oTransform = hslider.style.transform;
 						hslider.style.transition = transition;
 
 						clearTimeout(hscrollbartimeout);
@@ -454,13 +462,14 @@
 						showScroll: false,
 						rubber: that.rubber,
 						onScroll:function (posX, posY, scaleX, scaleY, originX, originY, transition, state) {
-							var hslider = that.querySelector(".hslider"),
-								hscrollbar = that.querySelector(".hscrollbar"),
-								percentageX = Math.abs(posX / (that.querySelector(".tbl-scrl-hor > div").offsetWidth - that.querySelector(".tbl-scrl-hor").offsetWidth));
-
 							if (posX != oldPosX) {
 								oldPosX = posX;
-								updateHScrollPosition (hslider, hscrollbar, percentageX, transition);
+								updateHScrollPosition (
+									that.querySelector(".hslider"),
+									that.querySelector(".hscrollbar"),
+									Math.abs(posX / (that.querySelector(".tbl-scrl-hor > div").offsetWidth - that.querySelector(".tbl-scrl-hor").offsetWidth)),
+									transition
+								);
 							}
 						}
 					});
@@ -470,13 +479,14 @@
 						showScroll: false,
 						rubber: that.rubber,
 						onScroll:function (posX, posY, scaleX, scaleY, originX, originY, transition, state) {
-							var vslider = that.querySelector(".vslider"),
-								vscrollbar = that.querySelector(".vscrollbar"),
-								percentageY = Math.abs(posY / (that.querySelector(".tbl-scrl-ver > div").offsetHeight - that.querySelector(".tbl-scrl-ver").offsetHeight));
-
 							if (posY != oldPosY) {
 								oldPosY = posY;
-								updateVScrollPosition (vslider, vscrollbar, percentageY, transition);
+								updateVScrollPosition (
+									that.querySelector(".vslider"),
+									that.querySelector(".vscrollbar"),
+									Math.abs(posY / (that.querySelector(".tbl-scrl-ver > div").offsetHeight - that.querySelector(".tbl-scrl-ver").offsetHeight)),
+									transition
+								);
 							}
 						}
 					});

@@ -8,10 +8,12 @@
 	display:-webkit-box;
 	display:-moz-box;
 	display:-ms-box;
+	display:-o-box;
 	display:box;
 	-webkit-box-orient:vertical;
 	-moz-box-orient:vertical;
 	-ms-box-orient:vertical;
+	-o-box-orient:vertical;
 	box-orient:vertical;
 }
 .flx-rw {
@@ -19,10 +21,12 @@
 	-webkit-box-align:stretch;
 	-moz-box-align:stretch;
 	-ms-box-align:stretch;
+	-o-box-align:stretch;
 	box-align:stretch;
 	-webkit-box-orient:horizontal;
 	-moz-box-orient:horizontal;
 	-ms-box-orient:horizontal;
+	-o-box-orient:horizontal;
 	box-orient:horizontal;
 }
 .flx-rw.hide { display:none }
@@ -69,10 +73,12 @@
 	-webkit-appearance:none;
 	-moz-appearance:none;
 	-ms-appearance:none;
+	-o-appearance:none;
 	appearance:none;
 	-webkit-border-radius:0;
 	-moz-border-radius:0;
 	-ms-border-radius:0;
+	-o-border-radius:0;
 	border-radius:0;
 }
 .flx-cl,
@@ -80,22 +86,20 @@
 .flx-cl input { cursor:text }
 
 .scrollbar { position:absolute }
-.vscrollbar { top:0; bottom:8px; left:initial; right:0; width:8px }
-.hscrollbar { top:initial; bottom:0; left:0; right:8px; height:8px }
+.vscrollbar { top:8px; bottom:8px; left:initial; right:0; width:8px }
+.hscrollbar { top:initial; bottom:0; left:8px; right:8px; height:8px }
 .scrollbar .hslider,
 .scrollbar .vslider {
 	position:absolute; top:0; left:0; background:rgba(0,0,0,0.48); border:1px solid rgba(255,255,255,0.48); opacity:0; cursor:pointer;
-	-webkit-border-radius:8px;
-	-moz-border-radius:8px;
-	-ms-border-radius:8px;
-	border-radius:8px;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	-ms-box-sizing:border-box;
+	-o-box-sizing:border-box;
 	box-sizing:border-box;
 	-webkit-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
 	-moz-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
 	-ms-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
+	-o-transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
 	transition:all 0.256s cubic-bezier(0, 0, 0.5, 1);
 }
 .scrollbar.hover .hslider,
