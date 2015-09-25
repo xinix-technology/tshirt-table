@@ -449,8 +449,8 @@
 						vsliderheight = (that.querySelector(".tbl-scrl-ver").offsetHeight / that.querySelector(".tbl-scrl-ver > div").offsetHeight * 100);
 
 					// Constrain the slider size so it won't be to small
-					if (hsliderwidth < 32) hsliderwidth = 32;
-					if (vsliderheight < 32) vsliderheight = 32;
+					if (hsliderwidth < 32 || !that.querySelector(".tbl-scrl-hor > div").offsetWidth) hsliderwidth = 32;
+					if (vsliderheight < 32 || !that.querySelector(".tbl-scrl-ver > div").offsetHeight) vsliderheight = 32;
 
 					that.querySelector(".hslider").style.width = (hsliderwidth * that.querySelector(".hscrollbar").offsetWidth / 100) + "px";
 					that.querySelector(".vslider").style.height = (vsliderheight * that.querySelector(".vscrollbar").offsetHeight / 100) + "px";
