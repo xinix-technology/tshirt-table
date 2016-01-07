@@ -7,12 +7,12 @@
 	cursor:pointer;
 	display:-webkit-box;
 	display:-moz-box;
-	display:-ms-box;
-	display:-o-box;
+  	display:-ms-flexbox;
+  	display:-o-box;
 	display:box;
 	-webkit-box-orient:vertical;
 	-moz-box-orient:vertical;
-	-ms-box-orient:vertical;
+	-ms-flex-direction:column;
 	-o-box-orient:vertical;
 	box-orient:vertical;
 }
@@ -20,12 +20,12 @@
 	margin:0 0 1px;
 	-webkit-box-align:stretch;
 	-moz-box-align:stretch;
-	-ms-box-align:stretch;
+	-ms-flex-align:stretch;
 	-o-box-align:stretch;
 	box-align:stretch;
 	-webkit-box-orient:horizontal;
 	-moz-box-orient:horizontal;
-	-ms-box-orient:horizontal;
+	-ms-flex-direction:row;
 	-o-box-orient:horizontal;
 	box-orient:horizontal;
 }
