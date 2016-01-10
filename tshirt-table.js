@@ -66,11 +66,13 @@
 				// Count the table width, only once
 				if (this.tableWidth === 0) {
 					for (var i = this.config.width.length - 1; i >= 0; i--) {
-						if (this.config.width[i].indexOf("/") < 0)
-							tableWidth += parseInt(this.config.width[i]);
-						else {
-							var tempWidth = this.config.width[i].split ("/");
-							tableWidth += parseInt(tempWidth[0]);
+						if (this.config.width[i] != undefined) {
+							if (this.config.width[i].indexOf("/") < 0)
+								tableWidth += parseInt(this.config.width[i]);
+							else {
+								var tempWidth = this.config.width[i].split ("/");
+								tableWidth += parseInt(tempWidth[0]);
+							}
 						}
 					};
 
@@ -83,11 +85,13 @@
 				// Count the row width, only once
 				if (rowWidth === 0) {
 					for (var indexCol = startCol; indexCol < endCol; indexCol++) {
-						if (config.width[indexCol].indexOf("/") < 0)
-							rowWidth += parseInt(config.width[indexCol]);
-						else {
-							var tempWidth = config.width[indexCol].split ("/");
-							rowWidth += parseInt(tempWidth[0]);
+						if (config.width[indexCol] != undefined) {
+							if (config.width[indexCol].indexOf("/") < 0)
+								rowWidth += parseInt(config.width[indexCol]);
+							else {
+								var tempWidth = config.width[indexCol].split ("/");
+								rowWidth += parseInt(tempWidth[0]);
+							}
 						}
 					}
 				}
@@ -116,12 +120,14 @@
 								dataAlign += "flx-cl-ct ";
 
 							// Check if the config says that it have sub value
-							if (config.width[indexCol].indexOf ("/") < 0) {
-								columnWidth = config.width[indexCol];
-							} else {
-								arraySubValue = config.width[indexCol].split ("/");
-								indexesSubValue = arraySubValue[1].split (":");
-								columnWidth = arraySubValue[0];
+							if (config.width[indexCol] != undefined) {
+								if (config.width[indexCol].indexOf ("/") < 0) {
+									columnWidth = config.width[indexCol];
+								} else {
+									arraySubValue = config.width[indexCol].split ("/");
+									indexesSubValue = arraySubValue[1].split (":");
+									columnWidth = arraySubValue[0];
+								}
 							}
 
 							if (this.smallerTable)
@@ -129,48 +135,50 @@
 							else
 								columnWidth += "px";
 
-							if (isHead === true) {
-								if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
-								else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
-									// Column is findable
-									if (config.find)
-										if (config.find[indexCol]) {
-											html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
-											html += '<span class="search">' + dataRowCol + '</span>';
-										} else
+							if (config.width[indexCol] != undefined) {
+								if (isHead === true) {
+									if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+									else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+										// Column is findable
+										if (config.find)
+											if (config.find[indexCol]) {
+												html += '<input type="text" data-search="' + indexCol + '" placeholder="' + dataRowCol + '" style="display:none" />';
+												html += '<span class="search">' + dataRowCol + '</span>';
+											} else
+												html += '<span>' + dataRowCol + '</span>';
+										else
 											html += '<span>' + dataRowCol + '</span>';
-									else
-										html += '<span>' + dataRowCol + '</span>';
 
-									// Column is sortable
-									if (config.sort)
-										if (config.sort[indexCol])
-											html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
+										// Column is sortable
+										if (config.sort)
+											if (config.sort[indexCol])
+												html += '<span class="sort" data-sort="' + indexCol + '">&nbsp;</span>';
 
-									// Column have sub content
-									if (config.width[indexCol].indexOf ("/") >= 0) {
-										html += '<span class="sub">';
-											for (var i = 0; i < indexesSubValue.length; i++) {
-												html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
-											}
-										html += '</span>';
-									}
-								html += '</div></div>';
-							} else {
-								if (typeof config.type[indexCol] === "function") dataRowCol = config.type[indexCol](indexCol, data[indexRow][indexCol]);
+										// Column have sub content
+										if (config.width[indexCol].indexOf ("/") >= 0) {
+											html += '<span class="sub">';
+												for (var i = 0; i < indexesSubValue.length; i++) {
+													html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
+												}
+											html += '</span>';
+										}
+									html += '</div></div>';
+								} else {
+									if (typeof config.type[indexCol] === "function") dataRowCol = config.type[indexCol](indexCol, data[indexRow][indexCol]);
 
-								if (dataRowCol === undefined) dataRowCol = "-";
+									if (dataRowCol === undefined) dataRowCol = "-";
 
-								if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
-								else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
-									html += '<span class="cnt">' + dataRowCol + '</span>';
-									if (config.width[indexCol].indexOf ("/") >= 0) {
-										html += '<span class="sub">';
-											for (var i = 0; i < indexesSubValue.length; i++)
-												html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
-										html += '</span>';
-									}
-								html += '</div></div>';
+									if (config.width[indexCol].indexOf ("/") >= 0) html += '<div class="cl-' + indexCol + ' flx-cl flx-cl-mr ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+									else html += '<div class="cl-' + indexCol + ' flx-cl ' + dataAlign + '" style="width:' + columnWidth + '"><div class="pad">';
+										html += '<span class="cnt">' + dataRowCol + '</span>';
+										if (config.width[indexCol].indexOf ("/") >= 0) {
+											html += '<span class="sub">';
+												for (var i = 0; i < indexesSubValue.length; i++)
+													html += '<span class="cl-' + indexesSubValue[i] + '">' + data[indexRow][indexesSubValue[i]] + '</span>';
+											html += '</span>';
+										}
+									html += '</div></div>';
+								}
 							}
 						}
 
